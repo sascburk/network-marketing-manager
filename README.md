@@ -1,7 +1,7 @@
 # Burkard CRM
 
 Ein privates **Network-Marketing-CRM** als installierbare **PWA** (iPhone, Android, iPad, PC) für Familie Burkard.
-Selbst gehostet mit **Docker Compose**, läuft hinter dem **Cosmos-Cloud Reverse-Proxy** auf `burkard3.ch`.
+Selbst gehostet mit **Docker Compose**, läuft hinter dem **Cosmos-Cloud Reverse-Proxy** auf `nwm.burkard3.ch`.
 
 ## Funktionen
 
@@ -74,7 +74,7 @@ npm run gen-vapid
 > ```
 
 **Datenbank & Admin:** In der `.env` `POSTGRES_PASSWORD`, `DATABASE_URL` (gleiches Passwort!),
-sowie `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `ADMIN_NAME` setzen. `APP_URL` = `https://burkard3.ch`.
+sowie `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `ADMIN_NAME` setzen. `APP_URL` = `https://nwm.burkard3.ch`.
 
 ### 4. Starten
 
@@ -107,16 +107,16 @@ docker compose exec app node scripts/seed.mjs
 
 ---
 
-## Cosmos-Cloud + burkard3.ch einrichten
+## Cosmos-Cloud + nwm.burkard3.ch einrichten
 
 1. In **Cosmos-Cloud** eine neue **URL / Proxy-Regel** anlegen.
-2. **Host/Domain:** `burkard3.ch` (DNS muss auf deinen Server zeigen).
+2. **Host/Domain:** `nwm.burkard3.ch` (DNS muss auf deinen Server zeigen).
 3. **Ziel (Target):** der Container **`app`**, **Port `3000`**
    - Läuft Cosmos im selben Docker-Netzwerk, erreicht es den Container direkt über den Servicenamen `app:3000`.
    - Andernfalls in `docker-compose.yml` den Block `ports: - "3000:3000"` einkommentieren und auf `http://<server-ip>:3000` zeigen.
 4. **HTTPS/TLS** am Cosmos-Proxy aktivieren (Let’s Encrypt). Die App selbst nutzt nur HTTP intern –
    das ist korrekt, da TLS am Proxy terminiert wird (die App vertraut `X-Forwarded-Proto`).
-5. Danach ist die App unter **https://burkard3.ch** erreichbar.
+5. Danach ist die App unter **https://nwm.burkard3.ch** erreichbar.
 
 ---
 
@@ -151,7 +151,7 @@ Fällige Follow-ups und Geburtstage werden automatisch als Push verschickt.
   `SCHEDULER_INTERVAL_MINUTES` Minuten.
 - **Extern (optional):** `ENABLE_SCHEDULER=false` setzen und per System-Cron den geschützten Endpunkt aufrufen:
   ```bash
-  */15 * * * * curl -s -X POST https://burkard3.ch/api/cron/run -H "x-cron-secret: DEIN_SESSION_SECRET"
+  */15 * * * * curl -s -X POST https://nwm.burkard3.ch/api/cron/run -H "x-cron-secret: DEIN_SESSION_SECRET"
   ```
   (oder `node scripts/reminder-worker.mjs` mit gesetzten `APP_URL` und `SESSION_SECRET`.)
 

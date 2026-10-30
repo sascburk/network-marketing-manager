@@ -7,10 +7,10 @@
 #
 #  REVERSE PROXY (Cosmos-Cloud):
 #    TLS wird am Cosmos-Cloud-Proxy terminiert. Der Proxy leitet
-#    burkard3.ch  ->  http://app:3000  (bzw. http://<host>:3000) weiter.
+#    nwm.burkard3.ch  ->  http://app:3000  (bzw. http://<host>:3000) weiter.
 #    Die App spricht intern nur HTTP und vertraut X-Forwarded-Proto.
 #    In Cosmos: neue "URL"/Proxy-Regel anlegen, Ziel = Container "app",
-#    Port 3000, Host = burkard3.ch, "Force HTTPS" am Proxy aktivieren.
+#    Port 3000, Host = nwm.burkard3.ch, "Force HTTPS" am Proxy aktivieren.
 #
 #  Der Port wird hier NICHT nach aussen veroeffentlicht, wenn Cosmos im
 #  selben Docker-Netzwerk laeuft. Falls doch noetig, "ports" unten einkommentieren.
