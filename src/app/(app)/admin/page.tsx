@@ -1,0 +1,12 @@
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/auth";
+import AdminUsers from "@/components/AdminUsers";
+
+export const dynamic = "force-dynamic";
+
+export default async function AdminPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+  if (user.role !== "admin") redirect("/");
+  return <AdminUsers currentUserId={user.id} />;
+}

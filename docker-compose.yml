@@ -1,0 +1,67 @@
+# ============================================================
+#  Burkard CRM  -  Docker Compose Stack
+#
+#  Besteht aus zwei Services:
+#    - app : Next.js (Production, standalone) auf Port 3000
+#    - db  : PostgreSQL mit persistentem Volume
+#
+#  REVERSE PROXY (Cosmos-Cloud):
+#    TLS wird am Cosmos-Cloud-Proxy terminiert. Der Proxy leitet
+#    burkard3.ch  ->  http://app:3000  (bzw. http://<host>:3000) weiter.
+#    Die App spricht intern nur HTTP und vertraut X-Forwarded-Proto.
+#    In Cosmos: neue "URL"/Proxy-Regel anlegen, Ziel = Container "app",
+#    Port 3000, Host = burkard3.ch, "Force HTTPS" am Proxy aktivieren.
+#
+#  Der Port wird hier NICHT nach aussen veroeffentlicht, wenn Cosmos im
+#  selben Docker-Netzwerk laeuft. Falls doch noetig, "ports" unten einkommentieren.
+# ============================================================
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      SESSION_SECRET: ${SESSION_SECRET}
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY}
+      VAPID_SUBJECT: ${VAPID_SUBJECT}
+      APP_URL: ${APP_URL}
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: "0.0.0.0"
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_NAME: ${ADMIN_NAME}
+      ENABLE_SCHEDULER: ${ENABLE_SCHEDULER}
+      SCHEDULER_INTERVAL_MINUTES: ${SCHEDULER_INTERVAL_MINUTES}
+    # Exponiere den Port nur, wenn der Reverse-Proxy NICHT im selben
+    # Docker-Netzwerk laeuft. Cosmos-Cloud kann den Container i.d.R. direkt
+    # ueber das Docker-Netz erreichen.
+    # ports:
+    #   - "3000:3000"
+    expose:
+      - "3000"
+
+volumes:
+  pgdata:

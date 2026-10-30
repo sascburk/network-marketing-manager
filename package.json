@@ -1,0 +1,37 @@
+{
+  "name": "burkard-crm",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Network-Marketing CRM als installierbare PWA fuer Familie Burkard",
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "lint": "next lint",
+    "migrate": "node scripts/migrate.mjs",
+    "create-admin": "node scripts/create-admin.mjs",
+    "gen-vapid": "node scripts/gen-vapid.mjs",
+    "seed": "node scripts/seed.mjs",
+    "worker": "node scripts/reminder-worker.mjs"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "next": "15.5.28",
+    "pg": "^8.13.1",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "web-push": "^3.6.7"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^22.10.7",
+    "@types/pg": "^8.11.10",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
+    "@types/web-push": "^3.6.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3"
+  }
+}
